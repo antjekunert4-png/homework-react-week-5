@@ -1,17 +1,21 @@
 import React, { useState } from "react";
+import FormattedDate from "./FormattedDate";
 import axios from "axios";
 import "./Weather.css";
 
 export default function Weather(props) {
   const [weatherData, setWeatherData] = useState({ ready: false });
   function handleResponse(response) {
+    console.log(response.data);
     setWeatherData({
       ready: true,
-      temperature: response.data.main.temp,
-      humidity: response.data.main.humidity,
-      date: "Wednesday 07:00",
+      temperature: response.data.temperature.current,
+      humidity: response.data.temperature.humidity,
+      date: new Date(response.data.time * 1000),
+      description: response.data.condition.description,
+      iconUrl: "https://ssl.gstatic.com/onebox/weather/64/partly_cloudy.png",
       wind: response.data.wind.speed,
-      city: response.data.name,
+      city: response.data.city,
     });
   }
 
@@ -25,7 +29,7 @@ export default function Weather(props) {
                 type="search"
                 placeholder="Enter a city.."
                 className="form-control"
-                autoFocus="on"
+                autoFocus
               />
             </div>
             <div className="col-3">
@@ -39,14 +43,16 @@ export default function Weather(props) {
         </form>
         <h1>{weatherData.city}</h1>
         <ul>
-          <li>{weatherData.date}</li>
+          <li>
+            <FormattedDate date={weatherData.date} />
+          </li>
           <li className="text-capitalize">{weatherData.description}</li>
         </ul>
-        <div classNme="row mt-3">
+        <div className="row mt-3">
           <div className="col-6">
             <div className="clearfix">
               <img
-                src="{weatherData.iconUrl}"
+                src={weatherData.iconUrl}
                 alt={weatherData.description}
                 className="float-left"
               />
@@ -58,7 +64,7 @@ export default function Weather(props) {
               </div>
             </div>
           </div>
-          <div classNme="col-6">
+          <div className="col-6">
             <ul>
               <li>Precipitation: 15%</li>
               <li>Humidity: {weatherData.humidity}%</li>
@@ -70,11 +76,8 @@ export default function Weather(props) {
     );
   } else {
     const apiKey = "a75f8bb18344f8at30c2o163eff475bb";
-    let apiUrl =
-      "https://api.shecodes.io/weather/v1/current?query={props.defaultCity}&key={apiKey}";
-    axios.get(
-      `https://api.shecodes.io/weather/v1/current?query=${props.defaultCity}&key=a75f8bb18344f8at30c2o163eff475bb`,
-    );
+    let apiUrl = `https://api.shecodes.io/weather/v1/current?query=${props.defaultCity}&key=${apiKey}`;
+    axios.get(apiUrl).then(handleResponse);
 
     return "Loading...";
   }

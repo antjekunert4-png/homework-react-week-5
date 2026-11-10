@@ -23,7 +23,8 @@ export default function App() {
             rel="noopener noreferrer"
           >
             open-sourced on GitHub
-          </a>
+          </a>{" "}
+          and hosted on Netlify.
         </footer>
       </div>
     </div>

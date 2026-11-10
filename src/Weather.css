@@ -49,3 +49,12 @@
   line-height: 1;
   top: -34px;
 }
+.WeatherTemperature .selected-unit {
+  color: black;
+}
+
+.WeatherTemperature .unit a {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}

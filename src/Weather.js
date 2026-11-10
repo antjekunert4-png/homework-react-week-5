@@ -6,24 +6,19 @@ import "./Weather.css";
 export default function Weather(props) {
   const [weatherData, setWeatherData] = useState({ ready: false });
   const [city, setCity] = useState(props.defaultCity);
+
   function handleResponse(response) {
-    console.log(response.data);
     setWeatherData({
       ready: true,
-      temperature: response.data.temperature.current,
-      humidity: response.data.temperature.humidity,
-      date: new Date(response.data.time * 1000),
-      description: response.data.condition.description,
+      coordinates: response.data.coord,
+      temperature: response.data.main.temp,
+      humidity: response.data.main.humidity,
+      date: new Date(response.data.dt * 1000),
+      description: response.data.weather[0].description,
       icon: response.data.weather[0].icon,
       wind: response.data.wind.speed,
-      city: response.data.city,
+      city: response.data.name,
     });
-  }
-
-  function search() {
-    const apiKey = "a75f8bb18344f8at30c2o163eff475bb";
-    let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
-    axios.get(apiUrl).then(handleResponse);
   }
 
   function handleSubmit(event) {
@@ -35,13 +30,25 @@ export default function Weather(props) {
     setCity(event.target.value);
   }
 
+  function search() {
+    const apiKey = "bc057021f348479d9b5f265ef8096275";
+    let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+    axios.get(apiUrl).then(handleResponse);
+  }
+
   if (weatherData.ready) {
     return (
       <div className="Weather">
         <form onSubmit={handleSubmit}>
           <div className="row">
             <div className="col-9">
-              <input type="search" onChange={handleCityChange} />
+              <input
+                type="search"
+                placeholder="Enter a city.."
+                className="form-control"
+                autoFocus="on"
+                onChange={handleCityChange}
+              />
             </div>
             <div className="col-3">
               <input
@@ -52,10 +59,11 @@ export default function Weather(props) {
             </div>
           </div>
         </form>
-        <WeatherInfo data={props.data} />
+        <WeatherInfo data={weatherData} />
       </div>
     );
   } else {
+    search();
     return "Loading...";
   }
 }

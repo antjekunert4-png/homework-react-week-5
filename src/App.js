@@ -24,7 +24,15 @@ export default function App() {
           >
             open-sourced on GitHub
           </a>{" "}
-          and hosted on Netlify.
+          and{" "}
+          <a
+            href="https://deft-piroshki-94a55b.netlify.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            hosted on Netlify
+          </a>
+          .
         </footer>
       </div>
     </div>
